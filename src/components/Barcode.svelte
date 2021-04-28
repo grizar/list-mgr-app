@@ -4,8 +4,8 @@
   import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher();
-
-  import Quagga from 'quagga'; 
+  
+  import Quagga from '@ericblade/quagga2';
 
   let wrapper;
 
