@@ -32,8 +32,19 @@
         type : "LiveStream",
         target: wrapper
       },
-      halfSample: true,
-      patchSize: "medium",
+      constraints: {
+        width: 640,
+        height: 480,
+        video: {
+          mandatory: {
+            minWidth: { min: 1280 },
+            minHeight: { min: 720 }
+          }
+        }
+
+      },
+      showCanvas: false,
+      locator: false,
       decoder : {
         readers : ["ean_reader"]
       }
