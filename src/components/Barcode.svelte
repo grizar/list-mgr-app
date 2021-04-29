@@ -28,7 +28,7 @@
     }
   })
   .catch(function(err) {         });
-
+  console.log('Camera selected');
   console.log(backCamID);
 
   function barcode(code) {
@@ -47,6 +47,8 @@
 
   onMount(() => {
     console.log(wrapper);
+    console.log('Camera');
+    console.log(backCamID);
     Quagga.init({
       inputStream : {
         name : "Live",
