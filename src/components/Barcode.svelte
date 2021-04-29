@@ -9,6 +9,28 @@
 
   let wrapper;
 
+  var backCamID = null;
+  var last_camera = null;
+  navigator.mediaDevices.enumerateDevices()
+  .then(function(devices) {
+    devices.forEach(function(device) {  
+      console.log(device);
+      if( device.kind == "videoinput" && device.label.match(/back/) !== null ){
+            backCamID = device.deviceId;
+      }
+      if( device.kind === "videoinput"){
+        last_camera = device.deviceId;
+      } 
+    });
+  
+    if( backCamID === null){
+      backCamID = last_camera;
+    }
+  })
+  .catch(function(err) {         });
+
+  console.log(backCamID);
+
   function barcode(code) {
     console.log(code);
     Quagga.stop();
@@ -16,7 +38,6 @@
 		dispatch('message', {
       type: 'code',
 			code: code.codeResult.code
-
 		});
 	}
 
@@ -33,13 +54,15 @@
         target: wrapper
       },
       constraints: {
-        width: 640,
-        height: 480,
+        width: 320,
+        height: 240,
         video: {
           mandatory: {
             minWidth: { min: 1280 },
             minHeight: { min: 720 }
-          }
+          },
+        facingMode: "environment",
+        deviceId: backCamID
         }
 
       },
