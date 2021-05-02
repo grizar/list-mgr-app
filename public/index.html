@@ -5,6 +5,7 @@
 	<meta name='viewport' content='width=device-width,initial-scale=1'>
 
 	<title>List manager</title>
+	<link rel="manifest" href="manifest.webmanifest">
 
 	<link
 	href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons&display=swap"
@@ -15,6 +16,14 @@
 	<link rel='stylesheet' href='./build/bundle.css'>
 
 	<script defer src='./build/bundle.js'></script>
+
+	<script>
+	console.log('Start service worker');
+	if('serviceWorker' in navigator) {
+		console.log('starting service worker');
+		navigator.serviceWorker.register('/generate-sw.js');
+	};
+</script>
 </head>
 
 <body>

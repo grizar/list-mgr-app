@@ -1,12 +1,8 @@
 <script>
-  import {
-    local,
-    categoryList,
-    database
-  } from "../components/state.js";
+  import { local, categoryList, database } from "../components/state.js";
 
-  import Barcode from "../components/Barcode.svelte"
-  
+  import Barcode from "../components/Barcode.svelte";
+
   import { Button } from "smelte";
   import { TextField } from "smelte";
   import { Select } from "smelte";
@@ -25,15 +21,16 @@
 
   export let params = {};
 
+  var useBarcode = false; // the barcode function is not activated due to a Chrome bug
   var barcodeScannerVisible = false;
 
   var item = {};
   var saveOnDestroy = true;
   var queryInProgress = false;
 
-  var selectCategories = $categoryList.map(oneItem => ({
+  var selectCategories = $categoryList.map((oneItem) => ({
     value: oneItem._id,
-    text: oneItem.category
+    text: oneItem.category,
   }));
 
   function saveItem(doPop = true) {
@@ -84,7 +81,7 @@
       dispatch("routeEvent", {
         action: "displaySnackbar",
         message: $local.scanNotFound,
-        color: "error"
+        color: "error",
       });
     }
     queryInProgress = false;
@@ -92,9 +89,9 @@
 
   function barcodeScannerResult(message) {
     barcodeScannerVisible = false;
-    console.log('Result from barcode scanner');
+    console.log("Result from barcode scanner");
     console.log(message);
-    if (message.detail.type == 'code') {
+    if (message.detail.type == "code") {
       getBarcodeInfo(message.detail.code);
     }
   }
@@ -103,7 +100,7 @@
     dispatch("routeEvent", {
       action: "displaySnackbar",
       message: $local.scanError + error,
-      color: "error"
+      color: "error",
     });
   }
 
@@ -128,9 +125,9 @@
         method: "GET",
         headers: {
           Accept: "application/json",
-          "Content-Type": "text/plain"
+          "Content-Type": "text/plain",
           // ,UserAgent: navigator.userAgent
-        }
+        },
       });
       const product = await response.json();
       if (product.status === 0) {
@@ -167,10 +164,12 @@
         flat
         color="white"
         text
-        on:click={back} />
+        on:click={back}
+      />
     </div>
     <h6 class="md:pl-3 text-white text-lg">{$local.product}</h6>
-      <Spacer />
+    <Spacer />
+    {#if useBarcode}
       {#if queryInProgress}
         <ProgressCircular size="50" color="alert" />
       {:else}
@@ -180,12 +179,14 @@
           color="white"
           flat
           text
-          on:click={barcodeScan} />
+          on:click={barcodeScan}
+        />
       {/if}
+    {/if}
   </AppBar>
 
   {#if barcodeScannerVisible}
-  <Barcode on:message={barcodeScannerResult}></Barcode>
+    <Barcode on:message={barcodeScannerResult} />
   {/if}
 
   <TextField
@@ -195,7 +196,8 @@
     outlined
     type="text"
     min="3"
-    max="100" />
+    max="100"
+  />
 
   <Select
     bind:value={item.categoryId}
@@ -203,7 +205,8 @@
     items={selectCategories}
     dense
     noUnderline
-    class="mb-6" />
+    class="mb-6"
+  />
 
   <TextField
     id="detail"
@@ -213,12 +216,12 @@
     textarea
     type="text"
     min="3"
-    max="500" />
+    max="500"
+  />
 
-  {#if item.image_url != undefined && item.image_url != ''}
+  {#if item.image_url != undefined && item.image_url != ""}
     <div class="text-center">
       <Image src={item.image_url} alt={item.produit} />
     </div>
   {/if}
-
 </div>
