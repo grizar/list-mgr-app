@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset='utf-8'>
 	<meta name='viewport' content='width=device-width,initial-scale=1'>
@@ -7,25 +8,28 @@
 	<title>List manager</title>
 	<link rel="manifest" href="manifest.webmanifest">
 
-	<link
-	href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons&display=swap"
-	rel="stylesheet"
-  	/>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons&display=swap"
+		rel="stylesheet" />
 	<link rel='icon' type='image/png' href='./favicon.png'>
 	<link rel='stylesheet' href='./global.css'>
 	<link rel='stylesheet' href='./build/bundle.css'>
 
 	<script defer src='./build/bundle.js'></script>
 
-	<script>
-	console.log('Start service worker');
-	if('serviceWorker' in navigator) {
-		console.log('starting service worker');
-		navigator.serviceWorker.register('/generate-sw.js');
-	};
-</script>
 </head>
 
 <body>
+	<script src="/scripts/install.js"></script>
+	<script>
+		if ('serviceWorker' in navigator) {
+			window.addEventListener('load', () => {
+				navigator.serviceWorker.register('/generate-sw.js')
+					.then((reg) => {
+						console.log('Service worker registered.', reg);
+					});
+			});
+		}
+	</script>
 </body>
+
 </html>

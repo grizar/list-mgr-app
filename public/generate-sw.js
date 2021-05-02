@@ -16,7 +16,9 @@ Copyright 2015, 2019 Google Inc. All Rights Reserved.
 const OFFLINE_VERSION = 1;
 const CACHE_NAME = 'offline';
 // Customize this with a different URL if needed.
-const CACHE_FILES =  [
+const FILES_TO_CACHE =  [
+  '/',
+  '/generate-sw.js',
   'https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons&display=swap',
   '/index.html',
   '/favicon.png',
@@ -25,46 +27,50 @@ const CACHE_FILES =  [
   '/build/bundle.js'];
 
 
-self.addEventListener('install', function(event) {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(function(cache) {
-      return cache.addAll(
-        CACHE_FILES
-      );
-    })
-  );
-});
-
-self.addEventListener('activate', function(event) {
-  console.log('activate');
-  event.waitUntil(
-    caches.keys().then(function(cacheNames) {
-      console.log('caches keys');
-      return Promise.all(
-        cacheNames.filter(function(cacheName) {
-          console.log('Test cache ' + cacheName);
-          return (cacheName != CACHE_NAME);
-          // Return true if you want to remove this cache,
-          // but remember that caches are shared across
-          // the whole origin
-        }).map(function(cacheName) {
-          console.log('Delete cache ' + cacheName);
-          return caches.delete(cacheName);
+  self.addEventListener('install', (evt) => {
+    console.log('[ServiceWorker] Install');
+  
+    evt.waitUntil(
+        caches.open(CACHE_NAME).then((cache) => {
+          console.log('[ServiceWorker] Pre-caching offline page');
+          return cache.addAll(FILES_TO_CACHE);
         })
-      );
-    })
-  );
-});
-
-self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.open(CACHE_NAME).then(function(cache) {
-      return cache.match(event.request).then(function (response) {
-        return response || fetch(event.request).then(function(response) {
-          cache.put(event.request, response.clone());
-          return response;
-        });
-      });
-    })
-  );
-});
+    );
+  
+    self.skipWaiting();
+  });
+  
+  self.addEventListener('activate', (evt) => {
+    console.log('[ServiceWorker] Activate');
+    // Remove previous cached data from disk.
+    evt.waitUntil(
+        caches.keys().then((keyList) => {
+          return Promise.all(keyList.map((key) => {
+            if (key !== CACHE_NAME) {
+              console.log('[ServiceWorker] Removing old cache', key);
+              return caches.delete(key);
+            }
+          }));
+        })
+    );
+  
+    self.clients.claim();
+  });
+  
+  self.addEventListener('fetch', (evt) => {
+    console.log('[ServiceWorker] Fetch', evt.request.url);
+    // Add fetch event handler here.
+    if (evt.request.mode !== 'navigate') {
+      // Not a page navigation, bail.
+      return;
+    }
+    evt.respondWith(
+        fetch(evt.request)
+            .catch(() => {
+              return caches.open(CACHE_NAME)
+                  .then((cache) => {
+                    return cache.match('offline.html');
+                  });
+            })
+    );
+  });
