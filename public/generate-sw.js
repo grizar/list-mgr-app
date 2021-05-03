@@ -17,14 +17,14 @@ const OFFLINE_VERSION = 1;
 const CACHE_NAME = 'offline';
 // Customize this with a different URL if needed.
 const FILES_TO_CACHE =  [
-  '/',
-  '/generate-sw.js',
+  './',
+  './generate-sw.js',
   'https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons&display=swap',
-  '/index.html',
-  '/favicon.png',
-  '/global.css',
-  '/build/bundle.css',
-  '/build/bundle.js'];
+  './index.html',
+  './favicon.png',
+  './global.css',
+  './build/bundle.css',
+  './build/bundle.js'];
 
 
   self.addEventListener('install', (evt) => {
