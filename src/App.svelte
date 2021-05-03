@@ -23,7 +23,6 @@
 
   import Router from "svelte-spa-router";
   import { push, location } from "svelte-spa-router";
-import { connect } from "node:http2";
 
   // routes
   const routes = {

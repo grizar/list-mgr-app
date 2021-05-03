@@ -41,7 +41,6 @@ export default {
 	},
 	plugins: [
 		builtins(),
-
 		svelte({
 			compilerOptions: {
 				// enable run-time checks when not in production
