@@ -54,6 +54,7 @@ export default {
 			postcss: [], // Your PostCSS plugins
 			whitelist: [], // Array of classnames whitelisted from purging
 			whitelistPatterns: [], // Same as above, but list of regexes
+			whitelitternsChildren: [/draw.*/], // regexp for missing '.drawer' class
 			tailwind: {
 			  theme: {
 				extend: {
