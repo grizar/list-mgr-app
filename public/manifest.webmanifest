@@ -2,7 +2,7 @@
     "theme_color": "#f69435",
     "background_color": "#f69435",
     "display": "standalone",
-    "scope": "/",
+    "scope": "./",
     "start_url": "./index.html",
     "name": "Courses",
     "short_name": "Courses",
