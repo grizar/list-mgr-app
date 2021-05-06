@@ -41,7 +41,7 @@
   push($parameters.startLocation);
 
   // Drawer functions & global variables
-  var showNav = false;
+  var showNav = true;
   var showNavOpenByButton = false;
   var menuItems = [];
 
